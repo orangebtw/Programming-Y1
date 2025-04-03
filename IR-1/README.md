@@ -46,12 +46,12 @@ int main() {
 
     for (size_t i = 0; i < n; ++i) {
         printf("Enter the %zu element: ", i + 1);
-        scanf("%f", array + i);
+        scanf("%f", array + i * sizeof(float));
     }
 
     float sum = 0;
     for (size_t i = 0; i < n; ++i) {
-        sum += *(array + i);
+        sum += *(array + i * sizeof(float));
     }
 
     float average = sum / n;
