@@ -174,7 +174,7 @@ int main() {
 
 | Имя | Тип | Смысл |
 | - | - | - |
-| month | unsigned int | Номер месяца |
+| month | unsigned char | Номер месяца |
 
 ### Код программы
 
