@@ -2,7 +2,62 @@
 #include <stdlib.h>
 #include <string.h>
 
-int sort_float_asc(const void* arg1, const void* arg2) {
+// Функция для чтения строк из файла
+long long getline(char** line, size_t* line_cap, FILE* file) {
+    // Буффер в который будут читаться куски файла
+    char buffer[128];
+
+    // Если указатель на строку равен NULL или емкость строки равна нулю, то
+    // выделяем память под считанную строку размером буффера
+    // и устанавливаем емкость
+    if (*line == NULL || *line_cap == 0) {
+        *line_cap = sizeof(buffer);
+        *line = malloc(*line_cap);
+    }
+
+    // Общий размер считанной конечной строки
+    size_t line_len = 0;
+    // Читаем куски файла размером буффера, пока не дойдем до конца файла
+    while (fgets(buffer, sizeof(buffer), file)) {
+        // Получаем длину строки в буффере
+        size_t buf_len = strlen(buffer);
+
+        // Если общая длина считанной строки + длина строки в буффере больше или равна емкости конечной строки, то
+        // увеличиваем емкость в 2 раза и перевыделяем память под конечную строку
+        if (line_len + buf_len >= *line_cap) {
+            *line_cap *= 2;
+            *line = realloc(*line, *line_cap);
+        }
+
+        // Количество байт которые нужно скопировать в конечную строку
+        size_t bytes_to_copy = buf_len;
+        // Если на конце строки в буффере стоит символ перевода строки
+        // уменьшаем количество байт к копированию на один,
+        // таким образом символ перевода строки не попадем в конечную строку
+        if (buffer[buf_len - 1] == '\n') {
+            bytes_to_copy -= 1;
+        }
+
+        // Копируем строку из буффера в конец конечной строки
+        memcpy((*line) + line_len, buffer, bytes_to_copy);
+        line_len += bytes_to_copy;
+
+        // Если на конце строки в буффере стоит символ перевода строки
+        // значит мы считали всю строку, поэтому ставим в конец конечной строки
+        // терминирующий ноль и возвращаем длину конечной строки
+        if (buffer[buf_len - 1] == '\n') {
+            (*line)[line_len] = '\0';
+            return line_len;
+        }
+    }
+
+    // Возвращаем -1, сигнализируя о том, что мы дошли до конца файла,
+    // но так и не прочитали строку (не нашли символ перевода строки)
+    return -1;
+}
+
+// Функция компаратор для сортировки флоатов в порядке возрастания
+int float_asc_cmp(const void* arg1, const void* arg2) {
     float a = *(const float*) arg1;
     float b = *(const float*) arg2;
 
@@ -12,64 +67,46 @@ int sort_float_asc(const void* arg1, const void* arg2) {
     return 0;
 }
 
-long long getline(char** line, size_t* line_cap, FILE* file) {
-    char buffer[128];
-
-    if (*line == NULL || *line_cap == 0) {
-        *line_cap = sizeof(buffer);
-        *line = malloc(*line_cap);
-    }
-
-    size_t line_len = 0;
-    while (fgets(buffer, sizeof(buffer), file)) {
-        size_t buf_len = strlen(buffer);
-
-        if (line_len + buf_len >= *line_cap) {
-            *line_cap *= 2;
-            *line = realloc(*line, *line_cap);
-        }
-
-        size_t bytes_to_copy = buf_len;
-        if (buffer[buf_len - 1] == '\n') {
-            bytes_to_copy -= 1;
-        }
-
-        memcpy((*line) + line_len, buffer, bytes_to_copy);
-        line_len += bytes_to_copy;
-
-        if (buffer[buf_len - 1] == '\n') {
-            (*line)[line_len] = '\0';
-            return line_len;
-        }
-    }
-
-    return -1;
-}
-
 int main(int argc, char** argv) {
+    // Проверяем, что количество аргументов достаточно
+    // 1 аргумент - путь к программе
+    // 2 аргумент - путь к файлу с числами
     if (argc < 2) {
         printf("You didn't provide a path to a file.\n");
         return 1;
     }
 
+    // Открываем файл в текстовом режиме чтения
     FILE* f = fopen(argv[1], "r");
+    // Если не удалось открыть файл сообщаем об этом пользователю
+    // и завершаем программу с кодом ошибки
     if (f == NULL) {
         printf("Couldn't open the file.\n");
         return 1;
     }
 
+    // Емкость массива чисел
     size_t capacity = 10;
+    // Выделяем память под массив с числами
     float* numbers = malloc(capacity * sizeof(float));
-
+    // Кол-во чисел в массиве
     size_t count = 0;
 
+    // Текущая считанная строка из файла
     char* line = NULL;
+    // Емкость считанной строки из файла
     size_t line_cap = 0;
 
+    // Читаем строки из файла, пока не дойдем до конца
     while (getline(&line, &line_cap, f) >= 0) {
+        // Пробуем конвертиртировать строку в флоат
+        // если не удалось - игнорируем
         if (sscanf(line, "%f", &numbers[count]) > 0) {
+            // Увеличиваем количество считанных чисел
             ++count;
 
+            // Если количество считанных чисел больше или равно емкости масива,
+            // то увеличиваем емкость в 2 раза и перевыделяем память
             if (count >= capacity) {
                 capacity = capacity * 2;
                 numbers = realloc(numbers, capacity * sizeof(float));
@@ -77,28 +114,43 @@ int main(int argc, char** argv) {
         }
     }
 
+    // Освобождаем память под строку, т.к. она нам больше не нужна
     free(line);
 
+    // Закрываем файл, т.к. он нам больше не нужен
     fclose(f);
 
-    qsort(numbers, count, sizeof(float), sort_float_asc);
+    // Сортируем числа в массиве в порядке возрастания
+    qsort(numbers, count, sizeof(float), float_asc_cmp);
 
+    // Сумма всех чисел в массиве
     float sum = 0.0f;
     for (size_t i = 0; i < count; ++i) {
         sum += numbers[i];
     }
 
+    // Среднее арифметическое всех чисел в массиве
     float mean = sum / count;
+    // Медиана чисел в массиве
     float median = 0.0f;
+    // Если чисел четное количество, то
+    // медиана это сумма двух чисел в центре
+    // 1 2 3 4
+    // Медиана = 2 + 3
     if (count % 2 == 0) {
         median = (numbers[count / 2 - 1] + numbers[count / 2]) / 2.0f;
+    // Если чисел нечетное количество,
+    // то медиана это единственное число в центре
     } else {
         median = numbers[count / 2];
     }
 
+    // Выводим среднее арифметичексое и медиану
     printf("%.2f %.2f\n", mean, median);
     
+    // Освобождаем память под массив чисел
     free(numbers);
 
+    // Возвращаем нулевое значение, сообщая, что программа завершилая без ошибок
     return 0;
 }
