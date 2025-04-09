@@ -1,0 +1,4 @@
+CompileFlags:
+    Add:
+        - "-I./task20/SDL2/include/"
+        - "-I./task17/curl/include/"
