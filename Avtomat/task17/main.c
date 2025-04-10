@@ -1,6 +1,7 @@
 #include <stdbool.h>
 #include <stdio.h>
 #include <string.h>
+#include <stdlib.h>
 
 #include <curl/curl.h>
 #include <curl/easy.h>
@@ -206,7 +207,7 @@ char* get_filename_from_url(const char* url) {
 }
 
 // Функция для чтения строк из файла
-long long getline(char** line, size_t* line_cap, FILE* file) {
+long long readline(char** line, size_t* line_cap, FILE* file) {
     // Буффер в который будут читаться куски файла
     char buffer[128];
 
@@ -351,7 +352,7 @@ int main(int argc, char** argv) {
             size_t line_cap = 0;
 
             // Читаем строки из файла пока не дойдем до конца
-            while (getline(&line, &line_cap, f) >= 0) {
+            while (readline(&line, &line_cap, f) >= 0) {
                 // Скачиваем файл по ссылке
                 download_file(curl, line);
             }

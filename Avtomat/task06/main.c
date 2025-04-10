@@ -3,7 +3,7 @@
 #include <string.h>
 
 // Функция для чтения строк из файла
-long long getline(char** line, size_t* line_cap, FILE* file) {
+long long readline(char** line, size_t* line_cap, FILE* file) {
     // Буффер в который будут читаться куски файла
     char buffer[128];
 
@@ -98,7 +98,7 @@ int main(int argc, char** argv) {
     size_t line_cap = 0;
 
     // Читаем строки из файла, пока не дойдем до конца
-    while (getline(&line, &line_cap, f) >= 0) {
+    while (readline(&line, &line_cap, f) >= 0) {
         // Пробуем конвертиртировать строку в флоат
         // если не удалось - игнорируем
         if (sscanf(line, "%f", &numbers[count]) > 0) {

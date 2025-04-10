@@ -8,6 +8,7 @@
 
 #include <stdint.h>
 #include <stdbool.h>
+#include <stddef.h>
 
 // Описание структуры динамического массива из элементов типа int
 typedef struct {

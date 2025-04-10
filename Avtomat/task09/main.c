@@ -4,7 +4,7 @@
 #include <string.h>
 
 // Функция для чтения строк из файла
-long long getline(char** line, size_t* line_cap, FILE* file) {
+long long readline(char** line, size_t* line_cap, FILE* file) {
     // Буффер в который будут читаться куски файла
     char buffer[128];
 
@@ -103,7 +103,7 @@ int main(int argc, char** argv) {
     // Считываем первую строку из файла с первой матрицей
     // Если не удалось считать строку сообщаем об этом пользователю,
     // закрываем оба файла и завершаем программу с кодом ошибки
-    if (getline(&line, &line_cap, f1) < 0) {
+    if (readline(&line, &line_cap, f1) < 0) {
         printf("The file is incorrect.\n");
         fclose(f1);
         fclose(f2);
@@ -116,7 +116,7 @@ int main(int argc, char** argv) {
     // Считываем первую строку из файла со второй матрицей
     // Если не удалось считать строку сообщаем об этом пользователю,
     // закрываем оба файла и завершаем программу с кодом ошибки
-    if (getline(&line, &line_cap, f2) < 0) {
+    if (readline(&line, &line_cap, f2) < 0) {
         printf("The file is incorrect.\n");
         fclose(f1);
         fclose(f2);
@@ -142,7 +142,7 @@ int main(int argc, char** argv) {
 
     // Считываем элементы первой матрицы
     for (size_t i = 0; i < m1_r; ++i) {
-        if (getline(&line, &line_cap, f1) < 0) {
+        if (readline(&line, &line_cap, f1) < 0) {
             printf("Matrix is wrong.\n");
             return 1;
         }
@@ -155,7 +155,7 @@ int main(int argc, char** argv) {
 
     // Считываем элементы второй матрицы
     for (size_t i = 0; i < m2_r; ++i) {
-        if (getline(&line, &line_cap, f2) < 0) {
+        if (readline(&line, &line_cap, f2) < 0) {
             printf("Matrix is wrong.\n");
             return 1;
         }

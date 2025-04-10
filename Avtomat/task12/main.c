@@ -15,7 +15,7 @@ typedef struct {
     unsigned short year;
 } Student;
 
-long long getline(CHAR_T** line, size_t* line_cap, FILE* file) {
+long long readline(CHAR_T** line, size_t* line_cap, FILE* file) {
     CHAR_T buffer[128];
 
     if (*line == NULL || *line_cap == 0) {
@@ -76,7 +76,7 @@ int main() {
 
     printf("Enter the number of students: ");
 
-    if (getline(&line, &line_cap, stdin) < 0) {
+    if (readline(&line, &line_cap, stdin) < 0) {
         printf("ERROR\n");
         return 1;
     }
@@ -95,7 +95,7 @@ int main() {
 
     for (size_t i = 0; i < count; ++i) {
         printf("Enter the student data: ");
-        if (getline(&line, &line_cap, stdin) < 0) {
+        if (readline(&line, &line_cap, stdin) < 0) {
             printf("ERRRO\n");
             return 1;
         }

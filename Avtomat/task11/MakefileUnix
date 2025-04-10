@@ -1,0 +1,15 @@
+CFLAGS = -Wall -Wextra -ggdb
+BUILDDIR = ../build
+
+.PHONY: all clean
+
+all: $(BUILDDIR)/task11
+
+$(BUILDDIR)/task11: main.c $(BUILDDIR)/dynarray.o
+	clang $(CFLAGS) ./main.c $(BUILDDIR)/dynarray.o -o $(BUILDDIR)/task11
+
+$(BUILDDIR)/dynarray.o: dynarray.h dynarray.c
+	clang $(CFLAGS) -c ./dynarray.c -o $(BUILDDIR)/dynarray.o
+
+clean:
+	rm $(BUILDDIR)/*.o

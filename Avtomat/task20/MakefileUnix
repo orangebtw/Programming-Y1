@@ -1,0 +1,9 @@
+CFLAGS = -Wall -Wextra -ggdb
+BUILDDIR = ../build
+
+.PHONY: all
+
+all: $(BUILDDIR)/task20
+
+$(BUILDDIR)/task20: main.c
+	clang $(CFLAGS) main.c -o $(BUILDDIR)/task20 -I SDL2/include/ -L SDL2/lib/x64/ -lSDL2

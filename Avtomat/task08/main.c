@@ -3,7 +3,7 @@
 #include <string.h>
 
 // Функция для чтения строк из файла
-long long getline(char** line, size_t* line_cap, FILE* file) {
+long long readline(char** line, size_t* line_cap, FILE* file) {
     // Буффер в который будут читаться куски файла
     char buffer[128];
 
@@ -90,7 +90,7 @@ int main(int argc, char** argv) {
     char** lines = malloc(lines_cap * sizeof(char*));
     
     // Читаем строки пока не достигнем конца файла
-    while ((line_len = getline(&line, &line_cap, f)) >= 0) {
+    while ((line_len = readline(&line, &line_cap, f)) >= 0) {
         // Если количество строк больше или равно емкости массива строк
         // Увеличиваем емкость в 2 раза и перевыделяем память под новую емкость
         if (lines_count >= lines_cap) {

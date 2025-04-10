@@ -1,4 +1,3 @@
-#include <corecrt_wctype.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -17,7 +16,7 @@ typedef struct {
 } Word;
 
 // Функция для чтения строк из файла
-long long getline(char** line, size_t* line_cap, FILE* file) {
+long long readline(char** line, size_t* line_cap, FILE* file) {
     // Буффер в который будут читаться куски файла
     char buffer[128];
 
@@ -128,7 +127,7 @@ int main(int argc, char** argv) {
     size_t line_cap = 0;
 
     // Считываем строки из файла пока не дойдем до конца файла
-    while (getline(&line, &line_cap, f) >= 0) {
+    while (readline(&line, &line_cap, f) >= 0) {
         // Разбиваем строку на слова
         char* word = strtok(line, DELIMETERS);
 
