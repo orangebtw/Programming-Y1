@@ -35,10 +35,10 @@ void stack_push(Stack* stack, long item) {
 }
 
 // Функция для вытаскивания последнего элемента из стека
-long stack_pop(Stack* stack) {
-    long item = stack->items[stack->size - 1];
-    stack->size--;
-    return item;
+bool stack_pop(Stack* stack, long* out_item) {
+    if (stack->size == 0) return false;
+    *out_item = stack->items[--stack->size];
+    return true;
 }
 
 // Функция для освобождения выделенной памяти под элементы стека
@@ -63,32 +63,67 @@ int main() {
     // Разбиваем строку на слова, разделенные пробелом
     char* token = strtok(str, " ");
 
+    // Флаг для выхода из цикла при возникновении ошибки
+    bool error = false;
+
     // Повторяем пока в строке не останется слов, разделенных пробелом
-    while (token != NULL) {
+    while (token != NULL && !error) {
         // Проверяем равен ли текущий символ какому-нибудь математическому символу
         switch (*token) {
             // Если текущий символ звездочка - производим операцию умножения
             case '*': {
-                long b = stack_pop(&stack);
-                long a = stack_pop(&stack);
+                long a, b;
+                if (!stack_pop(&stack, &b)) {
+                    error = true;
+                    break;
+                }
+                if (!stack_pop(&stack, &a)) {
+                    error = true;
+                    break;
+                }
+
                 stack_push(&stack, a * b);
             } break;
             // Если текущий символ слеш - производим операцию деления
             case '/': {
-                long b = stack_pop(&stack);
-                long a = stack_pop(&stack);
+                long a, b;
+                if (!stack_pop(&stack, &b)) {
+                    error = true;
+                    break;
+                }
+                if (!stack_pop(&stack, &a)) {
+                    error = true;
+                    break;
+                }
+
                 stack_push(&stack, a / b);
             } break;
             // Если текущий символ плюс - производим операцию сложения
             case '+': {
-                long b = stack_pop(&stack);
-                long a = stack_pop(&stack);
+                long a, b;
+                if (!stack_pop(&stack, &b)) {
+                    error = true;
+                    break;
+                }
+                if (!stack_pop(&stack, &a)) {
+                    error = true;
+                    break;
+                }
+
                 stack_push(&stack, a + b);
             } break;
             // Если текущий символ минус - производим операцию вычитания
             case '-': {
-                long b = stack_pop(&stack);
-                long a = stack_pop(&stack);
+                long a, b;
+                if (!stack_pop(&stack, &b)) {
+                    error = true;
+                    break;
+                }
+                if (!stack_pop(&stack, &a)) {
+                    error = true;
+                    break;
+                }
+
                 stack_push(&stack, a - b);
             } break;
             // Если текущий символ не равен никакому математическому символу,
@@ -110,16 +145,17 @@ int main() {
     free(str);
 
     // Если пользователь ввел выражение правильно, то в конце в стеке должен быть один элемент
-    // Иначе выводим сообщение об ошибке
-    if (stack.size != 1) {
+    // Если нет или когда известно, что произошла ошибка - сообщаем об этом пользователю
+    if (stack.size != 1 || error) {
         printf("The expression is not correct\n");
         // Возвращаем ненулевое значение, означающее, что произошла ошибка
         return 1;
     } else {
         // Достаем из стека единственный оставшийся элемент, который является результатом вычислений
-        int result = stack_pop(&stack);
+        long result;
+        stack_pop(&stack, &result);
         // Выводим пользователю результат
-        printf("Result: %d\n", result);
+        printf("Result: %ld\n", result);
     }
 
     // Освобождаем выделенную память под стек

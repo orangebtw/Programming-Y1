@@ -112,8 +112,8 @@ int main(int argc, char** argv) {
     fclose(f);
 
     // Выводим все прочитанные строки с обратном порядке 
-    for (size_t i = lines_count - 1; i >= 0; --i) {
-        printf("%s\n", lines[i]);
+    for (size_t i = lines_count; i > 0; --i) {
+        printf("%s\n", lines[i - 1]);
     }
 
     // Освобождаем выделенную память под строку
