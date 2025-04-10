@@ -164,7 +164,7 @@ char* get_filename_from_url(const char* url) {
     }
 
     // Создаем динамическую строку
-    String result = {0};
+    String result = string_create(name);
 
     // Сразу конвертируем динамическую строку в обычную строку
     // потому что нам нужно проверять существует ли файл с таким именеи
