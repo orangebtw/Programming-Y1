@@ -209,7 +209,7 @@ int main() {
 
 ### Результаты выполенной работы
 
-![result1.4](./images/result1.4.png)
+![result1.3](./images/result1.3.png)
 
 ## Задание 1.4
 

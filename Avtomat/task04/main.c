@@ -291,14 +291,20 @@ bool shunting_yard(char* str, Tokens* out_tokens) {
 }
 
 int main() {
+    // Выделяем память под строку
     char* str = malloc(255 * sizeof(char));
 
+    // Просим у пользователя ввести строку
     printf("Enter an expression: ");
     fgets(str, 255, stdin);
 
+    // Инициализируем динамический список с токенами
     Tokens tokens = {0};
+    // Преобразовываем строку в обратную польскую запись или Reverse Polish Notation (https://en.wikipedia.org/wiki/Reverse_Polish_notation),
+    // чтобы было удобнее вычислять выражение
     if (!shunting_yard(str, &tokens)) return 1;
 
+    // Освобождаем память под строку, т.к. она нам больше не нужна
     free(str);
 
     Tokens stack = {0};
