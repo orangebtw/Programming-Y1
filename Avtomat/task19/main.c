@@ -45,7 +45,7 @@ int pkcs7_unpad(unsigned char *buffer, size_t *len) {
 
 // Функция для зашифровки файла
 bool encrypt(int cipher_id, FILE* input, FILE* output, unsigned char* key, size_t key_size) {
-    // Код ошибки библиотке LibTomCrypt
+    // Код ошибки библиотеки LibTomCrypt
     int err;
 
     // Пытаемся инициализировать генератор случайных чисел
@@ -92,7 +92,7 @@ bool encrypt(int cipher_id, FILE* input, FILE* output, unsigned char* key, size_
 
     symmetric_CBC cbc;
     // Инициализируем шифровщик в режиме CBC
-    // если не получилось - сообщаем пользователю и завершаем программу
+    // если не получилось - сообщаем пользователю и выходим из функции
     if ((err = cbc_start(cipher_id, IV, key, key_size, 0, &cbc)) != CRYPT_OK) {
         printf("Couldn't initialize CBC: %s\n", error_to_string(err));
         return false;
@@ -108,7 +108,7 @@ bool encrypt(int cipher_id, FILE* input, FILE* output, unsigned char* key, size_
     // Читаем файл пока не дойдем до конца
     while ((read = fread(buffer, sizeof(unsigned char), sizeof(buffer), input)) == sizeof(buffer)) {
         // Шифруем прочитанную часть файла
-        // если не получилось - сообщаем пользователю и завершаем программу
+        // если не получилось - сообщаем пользователю и выходим из функции
         if ((err = cbc_encrypt(buffer, encrypted, 32, &cbc)) != CRYPT_OK) {
             printf("An error occured while encrypting: %s\n", error_to_string(err));
             return false;
@@ -154,7 +154,7 @@ bool decrypt(int cipher_id, FILE* input, FILE* output, unsigned char* key, size_
 
     symmetric_CBC cbc;
     // Инициализируем шифровщик в режиме CBC
-    // если не получилось - сообщаем пользователю и завершаем программу
+    // если не получилось - сообщаем пользователю и выходим из функции
     if ((err = cbc_start(cipher_id, IV, key, key_size, 0, &cbc)) != CRYPT_OK) {
         printf("Couldn't initialize CBC: %s\n", error_to_string(err));
         return false;
