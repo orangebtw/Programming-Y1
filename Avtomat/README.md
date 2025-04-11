@@ -76,7 +76,9 @@
 
 ![Результат](./images/result18.png)
 
-<!-- ## [Задача 19](./task01/main.c) -->
+## [Задача 19](./task01/main.c)
+
+![Результат](./images/result19.png)
 
 ## [Задача 20](./task20/main.c)
 

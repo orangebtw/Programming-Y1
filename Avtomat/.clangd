@@ -2,5 +2,6 @@ CompileFlags:
     Add: [
         -I./task20/SDL2/include/,
         -I./task17/curl/include/,
-        -I./task18/gsl/build/gsl/
+        -I./task18/gsl/build/gsl/.,
+        -I./task19/libtomcrypt/src/headers
     ]
